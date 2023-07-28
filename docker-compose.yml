@@ -1,0 +1,31 @@
+version: '3'
+
+# 名前つきボリューム
+volumes:
+  mysql_data:
+services:
+  web:
+    build:
+    # build context
+      context: .
+    # -f に相当。contextがルート
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+    ports:
+      - '3010:3010'
+    # railsでpryする用
+    # true を指定することでコンテナを起動させ続けることができます。   
+    tty: true
+    # stdin_openとは標準入出力とエラー出力をコンテナに結びつける設定です。
+    stdin_open: true
+    depends_on:
+    - db
+  db:
+    image: mysql:5.7
+    volumes:
+      - 'mysql_data:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: Test@1234
+    ports:
+      - '3306:3306'
