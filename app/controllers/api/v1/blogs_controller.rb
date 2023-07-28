@@ -1,4 +1,4 @@
-class BlogsController < ApplicationController
+class Api::V1::BlogsController < ApplicationController
   def index
     blogs = Blog.all
     render json: blogs
@@ -15,7 +15,7 @@ class BlogsController < ApplicationController
   end
 
   private
-  
+
   def blog_params
     params.require(:blog).permit(:title, :contents)
   end
