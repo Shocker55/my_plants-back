@@ -20,10 +20,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_110334) do
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "uid", null: false
-    t.string "name", null: false
-    t.string "avatar", null: false
-    t.text "bio", null: false
-    t.integer "role", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["uid"], name: "index_users_on_uid", unique: true

@@ -1,4 +1,6 @@
 class Api::V1::BlogsController < ApplicationController
+  before_action :authenticate, except: %i[index show]
+
   def index
     blogs = Blog.all
     render json: blogs

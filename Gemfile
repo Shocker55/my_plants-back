@@ -35,6 +35,10 @@ gem "rack-cors"
 
 gem 'mysql2', '~> 0.5'
 
+gem "jwt", "~> 2.2"
+
+gem "dotenv-rails", "~> 2.7.6"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
