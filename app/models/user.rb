@@ -1,7 +1,6 @@
 class User < ApplicationRecord
-  validates :uid, presence: true
-  validates :name, presence: true, length: { maximum: 50 }
-  validates :bio, presence: true, length: { maximum: 300 }
+  has_one :profile
+  has_many :records
 
-  enum role: { general: 0, admin: 1 }
+  validates :uid, presence: true
 end
