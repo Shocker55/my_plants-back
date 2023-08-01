@@ -34,3 +34,6 @@
 
 # vsCode Docker
 /.devcontainer
+
+/.env
+/.env.production
