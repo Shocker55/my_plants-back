@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate, except: %i[index show]
 
   def index
-    profiles = Profile.all
+    users = Profile.all
     render json: users
   end
 
