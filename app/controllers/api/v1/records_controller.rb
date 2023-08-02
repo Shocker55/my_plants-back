@@ -22,12 +22,25 @@ class Api::V1::RecordsController < ApplicationController
 
   def create
     record = current_user.records.build(record_params)
-    if record.save
-      head :created
+    if params[:base] === true
+      if record.save
+        head :created
+      else
+        render json: {message: "不正な値です", errors: record.errors.to_hash(true)}, status: 422
+      end
     else
-      render json: {message: "不正な値です", errors: record.errors.to_hash(true)}, status: 422
+      begin
+      ApplicationRecord.transaction do
+        record.save
+        RelatedRecord.create!(record_id: params[:baseId].to_i, related_record_id: record.id)
+      end
+        head :created
+      rescue => e
+        render json: {message: "不正な値です", errors: record.errors.to_hash(true)}, status: 422
+      end
     end
   end
+
 
   def record_params
     params.require(:record).permit(:title, :body, :image, :base)

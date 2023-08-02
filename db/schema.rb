@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_31_173544) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_02_073322) do
   create_table "profiles", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.string "avatar", null: false
@@ -33,6 +33,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_173544) do
     t.index ["user_id"], name: "index_records_on_user_id"
   end
 
+  create_table "related_records", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "record_id", null: false
+    t.integer "related_record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_id"], name: "index_related_records_on_record_id"
+    t.index ["related_record_id"], name: "index_related_records_on_related_record_id", unique: true
+  end
+
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "uid", null: false
     t.datetime "created_at", null: false
@@ -42,4 +51,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_31_173544) do
 
   add_foreign_key "profiles", "users"
   add_foreign_key "records", "users"
+  add_foreign_key "related_records", "records"
 end
