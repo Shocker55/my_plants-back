@@ -22,7 +22,7 @@ class Api::V1::RecordsController < ApplicationController
 
   def create
     record = current_user.records.build(record_params)
-    if params[:base] === true
+    if params[:base] === "true"
       if record.save
         head :created
       else
@@ -42,7 +42,9 @@ class Api::V1::RecordsController < ApplicationController
   end
 
 
+  private
+
   def record_params
-    params.require(:record).permit(:title, :body, :image, :base)
+    params.permit(:title, :body, :image, :base)
   end
 end
