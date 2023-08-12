@@ -7,7 +7,7 @@ class Api::V1::RecordsController < ApplicationController
       if records = Record.where(user_id: user.id).where(base: true)
         render json: records
       else
-        render json: {message: "レコードがありません"}
+        render json: { message: "レコードがありません" }
       end
     else
       records = Record.all
@@ -22,25 +22,24 @@ class Api::V1::RecordsController < ApplicationController
 
   def create
     record = current_user.records.build(record_params)
-    if params[:base] === "true"
+    if params[:base] == "true"
       if record.save
         head :created
       else
-        render json: {message: "不正な値です", errors: record.errors.to_hash(true)}, status: 422
+        render json: { message: "不正な値です", errors: record.errors.to_hash(true) }, status: 422
       end
     else
       begin
-      ApplicationRecord.transaction do
-        record.save
-        RelatedRecord.create!(record_id: params[:baseId].to_i, related_record_id: record.id)
-      end
+        ApplicationRecord.transaction do
+          record.save
+          RelatedRecord.create!(record_id: params[:baseId].to_i, related_record_id: record.id)
+        end
         head :created
       rescue => e
-        render json: {message: "不正な値です", errors: record.errors.to_hash(true)}, status: 422
+        render json: { message: "不正な値です", errors: record.errors.to_hash(true) }, status: 422
       end
     end
   end
-
 
   private
 

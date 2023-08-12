@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
         @_current_user = User.find_or_create_by(uid: result[:uid])
       end
     end
-      { error: "token invalid"}
+    { error: "token invalid" }
   end
 
   def current_user

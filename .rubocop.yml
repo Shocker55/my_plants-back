@@ -1,0 +1,26 @@
+inherit_from: .rubocop_todo.yml
+
+Metrics/BlockLength:
+  Exclude:
+    - "db/schema.rb"
+
+Layout/LineLength:
+  Exclude:
+    - "bin/bundle"
+    - "app/lib/firebase_auth.rb"
+
+# クラスにコメントを残さなくても良い
+Style/Documentation:
+  Enabled: false
+
+# 文字列のfreeze（Ruby3からは自動でfreezeされるので要らない）
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# 文字列のダブルクォートチェック
+Style/StringLiterals:
+  Enabled: false
+
+# コントローラ等のモジュールをネストしての宣言
+Style/ClassAndModuleChildren:
+  Enabled: false
