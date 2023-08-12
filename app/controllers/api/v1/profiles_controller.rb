@@ -1,11 +1,10 @@
 class Api::V1::ProfilesController < ApplicationController
-
   def show
     user = User.find_by(uid: params[:id])
     if user.profile
-      render json: {profile:"exist"}
+      render json: { profile: "exist" }
     else
-      render json: {profile:"not exist"}
+      render json: { profile: "not exist" }
     end
   end
 
@@ -14,12 +13,11 @@ class Api::V1::ProfilesController < ApplicationController
     if @profile.save
       head :created
     else
-      render json: {message: @profile.errors.to_hash(true)}, status: 422
+      render json: { message: @profile.errors.to_hash(true) }, status: 422
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   private
 
