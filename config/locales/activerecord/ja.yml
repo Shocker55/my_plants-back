@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    models:
+      user: "ユーザー"
+      profile: "プロフィール"
+    attributes:
+      profile:
+        name: "ユーザー名"
+        avatar: "アバター画像"
+        bio: "ひとこと"

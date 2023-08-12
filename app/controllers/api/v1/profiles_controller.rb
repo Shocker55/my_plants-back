@@ -14,7 +14,7 @@ class Api::V1::ProfilesController < ApplicationController
     if @profile.save
       head :created
     else
-      render json: {message: "不正な値です", errors: @profile.errors.to_hash(true)}, status: 422
+      render json: {message: @profile.errors.to_hash(true)}, status: 422
     end
   end
 
@@ -24,6 +24,6 @@ class Api::V1::ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:profile).permit(:name, :avatar, :bio)
+    params.permit(:name, :avatar, :bio)
   end
 end
