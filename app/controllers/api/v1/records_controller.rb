@@ -17,6 +17,8 @@ class Api::V1::RecordsController < ApplicationController
 
   def show
     record = Record.find(params[:id])
+    return render json: record, include: [:related_records] if record.base == false
+
     render json: record
   end
 
@@ -31,8 +33,8 @@ class Api::V1::RecordsController < ApplicationController
     else
       begin
         ApplicationRecord.transaction do
-          record.save
-          RelatedRecord.create!(record_id: params[:baseId].to_i, related_record_id: record.id)
+          record.save!
+          record.related_records.create!(related_record_id: params[:baseId].to_i)
         end
         head :created
       rescue => e

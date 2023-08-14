@@ -13,12 +13,12 @@
 ActiveRecord::Schema[7.0].define(version: 2023_08_02_073322) do
   create_table "profiles", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
-    t.string "avatar", null: false
     t.text "bio", null: false
+    t.string "avatar"
     t.integer "role", default: 0, null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
   end
 
