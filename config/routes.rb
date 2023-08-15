@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       post "/auth", to: "authentications#create"
       resources :users, only: %i[index show create]
       resources :records, only: %i[index show create]
-      resources :profiles, only: %i[show create update]
+      resources :profiles, only: %i[create update]
     end
   end
 end

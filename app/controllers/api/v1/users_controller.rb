@@ -2,14 +2,12 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate, except: %i[index show]
 
   def index
-    users = Profile.all
-    render json: users
+    users = User.all
+    render json: users, include: [:profile]
   end
 
   def show
-    user = Profile.find_by(user_id: params[:id])
-    render json: user
+    user = User.find_by(uid: params[:id])
+    render json: user, include: [:profile]
   end
-
-  def update; end
 end
