@@ -11,7 +11,7 @@ class Api::V1::RecordsController < ApplicationController
       end
     else
       records = Record.all
-      render json: records
+      render json: records, include: [user: { include: :profile }]
     end
   end
 
