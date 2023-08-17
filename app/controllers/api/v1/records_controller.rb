@@ -9,6 +9,11 @@ class Api::V1::RecordsController < ApplicationController
       else
         render json: { message: "レコードがありません" }
       end
+    # あとでformObject等を使って処理をまとめる
+    elsif params[:q] == "own" && params[:uid]
+      user = User.find_by(uid: params[:uid])
+      records = Record.all.where(user_id: user.id)
+      render json: records, include: [user: { include: :profile }]
     else
       records = Record.all
       render json: records, include: [user: { include: :profile }]
