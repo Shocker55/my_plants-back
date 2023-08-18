@@ -24,7 +24,7 @@ class Api::V1::RecordsController < ApplicationController
     record = Record.find(params[:id])
     return render json: record, include: [:related_records] if record.base == false
 
-    render json: record
+    render json: record, include: [user: { include: :profile }]
   end
 
   def create
