@@ -9,17 +9,20 @@ class Api::V1::RecordsController < ApplicationController
       else
         render json: { message: "レコードがありません" }
       end
+    # あとでformObject等を使って処理をまとめる
+    elsif params[:q] == "own" && params[:uid]
+      user = User.find_by(uid: params[:uid])
+      records = Record.all.where(user_id: user.id)
+      render json: records, include: [record_likes: { include: :user }, user: { include: :profile }]
     else
       records = Record.all
-      render json: records
+      render json: records, include: [record_likes: { include: :user }, user: { include: :profile }]
     end
   end
 
   def show
     record = Record.find(params[:id])
-    return render json: record, include: [:related_records] if record.base == false
-
-    render json: record
+    render json: record, include: [record_likes: { include: :user }, user: { include: :profile }]
   end
 
   def create
@@ -41,6 +44,11 @@ class Api::V1::RecordsController < ApplicationController
         render json: { message: "不正な値です", errors: record.errors.to_hash(true) }, status: 422
       end
     end
+  end
+
+  def destroy
+    record = current_user.records.find(params[:id])
+    record.destroy!
   end
 
   private
