@@ -5,7 +5,7 @@ class Api::V1::RecordLikesController < ApplicationController
   end
 
   def destroy
-    record = current_user.record_likes.find(params[:id].to_i).record
+    record = current_user.record_likes.find_by(record_id: params[:id]).record
     current_user.unlike(record)
   end
 end
