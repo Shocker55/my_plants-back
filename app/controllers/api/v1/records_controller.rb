@@ -12,17 +12,38 @@ class Api::V1::RecordsController < ApplicationController
     # あとでformObject等を使って処理をまとめる
     elsif params[:q] == "own" && params[:uid]
       user = User.find_by(uid: params[:uid])
-      records = Record.all.where(user_id: user.id)
-      render json: records, include: [record_likes: { include: :user }, user: { include: :profile }]
+      records = user.records.includes(record_likes: { user: :profile }, user: :profile)
+      render json: records.as_json(include: [record_likes: { include: :user }, user: { include: :profile }])
     else
-      records = Record.all
-      render json: records, include: [record_likes: { include: :user }, user: { include: :profile }]
+
+      records = Record.includes(record_likes: { user: [:profile] }, user: [:profile]).all
+      render json: records.as_json(
+        include: [record_likes: { include: :user }, user: { include: :profile }]
+      )
     end
   end
 
   def show
-    record = Record.find(params[:id])
-    render json: record, include: [record_likes: { include: :user }, user: { include: :profile }]
+    record = Record.includes(record_comments: { user: :profile }, record_likes: :user, user: :profile).find(params[:id])
+    render json: record.as_json(
+      include: [
+        # レコードのコメントを含む
+        record_comments: {
+          include: {
+            # コメントのユーザー情報を含む
+            user: {
+              include: :profile # ユーザープロファイルも含む
+            }
+          }
+        },
+        record_likes: {
+          include: :user
+        },
+        user: {
+          include: :profile
+        }
+      ]
+    )
   end
 
   def create

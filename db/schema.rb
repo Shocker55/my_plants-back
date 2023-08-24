@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_064434) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_22_104940) do
   create_table "profiles", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.text "bio", null: false
@@ -20,6 +20,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_064434) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
+  end
+
+  create_table "record_comments", charset: "utf8mb4", force: :cascade do |t|
+    t.text "comment", null: false
+    t.bigint "user_id", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_id"], name: "index_record_comments_on_record_id"
+    t.index ["user_id"], name: "index_record_comments_on_user_id"
   end
 
   create_table "record_likes", charset: "utf8mb4", force: :cascade do |t|
@@ -60,6 +70,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_064434) do
   end
 
   add_foreign_key "profiles", "users"
+  add_foreign_key "record_comments", "records"
+  add_foreign_key "record_comments", "users"
   add_foreign_key "record_likes", "records"
   add_foreign_key "record_likes", "users"
   add_foreign_key "records", "users"
