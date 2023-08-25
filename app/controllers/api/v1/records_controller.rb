@@ -4,7 +4,7 @@ class Api::V1::RecordsController < ApplicationController
   def index
     if params[:uid] && params[:base] == "true"
       user = User.find_by(uid: params[:uid])
-      if records = Record.where(user_id: user.id).where(base: true)
+      if records = user.records.where(base: true)
         render json: records
       else
         render json: { message: "レコードがありません" }
@@ -12,10 +12,16 @@ class Api::V1::RecordsController < ApplicationController
     # あとでformObject等を使って処理をまとめる
     elsif params[:q] == "own" && params[:uid]
       user = User.find_by(uid: params[:uid])
-      records = user.records.includes(record_likes: { user: :profile }, user: :profile)
-      render json: records.as_json(include: [record_likes: { include: :user }, user: { include: :profile }])
+      records = user.records.includes(:related_records, record_likes: { user: :profile }, user: :profile)
+      render json: records.as_json(
+        include: [
+          :related_records, {
+            record_likes: { include: :user },
+            user: { include: :profile }
+          }
+        ]
+      )
     else
-
       records = Record.includes(record_likes: { user: [:profile] }, user: [:profile]).all
       render json: records.as_json(
         include: [record_likes: { include: :user }, user: { include: :profile }]

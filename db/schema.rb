@@ -59,7 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_104940) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["record_id"], name: "index_related_records_on_record_id"
-    t.index ["related_record_id"], name: "index_related_records_on_related_record_id", unique: true
+    t.index ["related_record_id", "record_id"], name: "index_related_records_on_related_record_id_and_record_id", unique: true
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
