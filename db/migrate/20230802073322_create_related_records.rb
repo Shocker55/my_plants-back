@@ -6,6 +6,6 @@ class CreateRelatedRecords < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :related_records, :related_record_id, unique: true
+    add_index :related_records, %i[related_record_id record_id], unique: true
   end
 end

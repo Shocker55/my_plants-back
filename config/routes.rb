@@ -3,9 +3,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post "/auth", to: "authentications#create"
-      resources :users, only: %i[index show create]
+      resources :users, only: %i[index show create] do
+        member do
+          get :likes
+        end
+      end
       resources :profiles, only: %i[create update]
-      resources :records, only: %i[index show create destroy]
+      resources :records, only: %i[index show create destroy] do
+        resources :record_comments, only: %i[create]
+      end
+      resources :record_comments, only: %i[destroy]
       resources :record_likes, only: %i[create destroy]
     end
   end
