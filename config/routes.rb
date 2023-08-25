@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :records, only: %i[index show create destroy] do
         resources :record_comments, only: %i[create]
       end
+      resources :record_comments, only: %i[destroy]
       resources :record_likes, only: %i[create destroy]
     end
   end

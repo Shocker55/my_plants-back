@@ -8,5 +8,8 @@ class Api::V1::RecordCommentsController < ApplicationController
     end
   end
 
-  def destroy; end
+  def destroy
+    comment = current_user.record_comments.find(params[:id])
+    comment.destroy!
+  end
 end
