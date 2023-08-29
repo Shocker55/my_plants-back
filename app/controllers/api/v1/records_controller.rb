@@ -12,7 +12,7 @@ class Api::V1::RecordsController < ApplicationController
     # あとでformObject等を使って処理をまとめる
     elsif params[:q] == "own" && params[:uid]
       user = User.find_by(uid: params[:uid])
-      records = user.records.includes(:related_records, record_likes: { user: :profile }, user: :profile)
+      records = user.records.includes(:related_records, record_likes: { user: :profile }, user: :profile).order(updated_at: "DESC")
       render json: records.as_json(
         include: [
           :related_records, {
@@ -22,7 +22,7 @@ class Api::V1::RecordsController < ApplicationController
         ]
       )
     else
-      records = Record.includes(record_likes: { user: [:profile] }, user: [:profile]).all
+      records = Record.includes(record_likes: { user: [:profile] }, user: [:profile]).all.order(updated_at: "DESC")
       render json: records.as_json(
         include: [record_likes: { include: :user }, user: { include: :profile }]
       )
