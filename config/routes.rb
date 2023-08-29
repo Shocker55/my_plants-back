@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :profiles, only: %i[create update]
       resources :records, only: %i[index show create destroy] do
         resources :record_comments, only: %i[create]
+        get :related_records
       end
       resources :record_comments, only: %i[destroy]
       resources :record_likes, only: %i[create destroy]
