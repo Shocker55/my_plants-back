@@ -8,3 +8,10 @@ ja:
         name: "ユーザー名"
         avatar: "アバター画像"
         bio: "ひとこと"
+      event:
+        title: "イベント名"
+        body: "イベント詳細"
+        date: "日時"
+        place: "場所"
+        official_url: "公式URL"
+        end_date: "終了日"

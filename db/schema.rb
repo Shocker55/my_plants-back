@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_22_104940) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_30_100233) do
+  create_table "events", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.text "body", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.integer "date_type", null: false
+    t.time "start_time"
+    t.time "end_time"
+    t.string "place", null: false
+    t.string "official_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
   create_table "profiles", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.text "bio", null: false
@@ -69,6 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_104940) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "events", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "record_comments", "records"
   add_foreign_key "record_comments", "users"
