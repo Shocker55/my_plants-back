@@ -2,13 +2,17 @@ class Api::V1::EventsController < ApplicationController
   before_action :authenticate, expect: %i[index show]
 
   def index
-    events = Event.all.order(updated_at: "DESC")
-    render json: events
+    events = Event.includes(user: [:profile]).all.order(updated_at: "DESC")
+    render json: events.as_json(
+      include: [user: { include: :profile }]
+    )
   end
 
   def show
-    event = Event.find(params[:id])
-    render json: event
+    event = Event.includes(user: [:profile]).find(params[:id])
+    render json: event.as_json(
+      include: [user: { include: :profile }]
+    )
   end
 
   def create
@@ -26,9 +30,19 @@ class Api::V1::EventsController < ApplicationController
     end
   end
 
-  def edit; end
+  def update
+    event = current_user.events.find(params[:id])
+    if event.update(event_params)
+      head :created
+    else
+      render json: { message: event.errors.to_hash(true) }, status: 422
+    end
+  end
 
-  def destroy; end
+  def destroy
+    event = current_user.events.find(params[:id])
+    event.destroy!
+  end
 
   private
 
@@ -39,6 +53,6 @@ class Api::V1::EventsController < ApplicationController
   def calculate_last_day(date_param)
     year, month = date_param.split('-').map(&:to_i)
     last_day = Date.new(year, month, -1).day.to_s
-    `#{date_param}-#{last_day}`
+    "#{date_param}-#{last_day}"
   end
 end
