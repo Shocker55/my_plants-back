@@ -11,7 +11,19 @@ class Api::V1::EventsController < ApplicationController
   def show
     event = Event.includes(user: [:profile]).find(params[:id])
     render json: event.as_json(
-      include: [user: { include: :profile }]
+      include: [
+        event_comments: {
+          include: {
+            # コメントのユーザー情報を含む
+            user: {
+              include: :profile # ユーザープロファイルも含む
+            }
+          }
+        },
+        user: {
+          include: :profile
+        }
+      ]
     )
   end
 

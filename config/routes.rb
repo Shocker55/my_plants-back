@@ -16,7 +16,10 @@ Rails.application.routes.draw do
       resources :record_comments, only: %i[destroy]
       resources :record_likes, only: %i[create destroy]
 
-      resources :events, only: %i[index show create update destroy]
+      resources :events, only: %i[index show create update destroy] do
+        resources :event_comments, only: %i[create]
+      end
+      resources :event_comments, only: %i[destroy]
     end
   end
 end

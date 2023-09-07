@@ -4,7 +4,8 @@ class User < ApplicationRecord
   has_many :record_likes, dependent: :destroy
   has_many :like_records, through: :record_likes, source: :record, dependent: :destroy
   has_many :record_comments, dependent: :destroy
-  has_many :events
+  has_many :events, dependent: :destroy
+  has_many :event_comments, dependent: :destroy
 
   validates :uid, presence: true
 
