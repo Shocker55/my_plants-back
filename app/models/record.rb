@@ -3,6 +3,7 @@ class Record < ApplicationRecord
   belongs_to :user
   has_many :related_records, dependent: :destroy
   has_many :record_likes, dependent: :destroy
+  has_many :record_bookmarks, dependent: :destroy
   has_many :record_comments, dependent: :destroy
 
   validates :user_id, presence: true

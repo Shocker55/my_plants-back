@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_07_102127) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_10_022411) do
   create_table "event_bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
@@ -57,6 +57,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_102127) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
+  end
+
+  create_table "record_bookmarks", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_id"], name: "index_record_bookmarks_on_record_id"
+    t.index ["user_id", "record_id"], name: "index_record_bookmarks_on_user_id_and_record_id", unique: true
+    t.index ["user_id"], name: "index_record_bookmarks_on_user_id"
   end
 
   create_table "record_comments", charset: "utf8mb4", force: :cascade do |t|
@@ -112,6 +122,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_102127) do
   add_foreign_key "event_comments", "users"
   add_foreign_key "events", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "record_bookmarks", "records"
+  add_foreign_key "record_bookmarks", "users"
   add_foreign_key "record_comments", "records"
   add_foreign_key "record_comments", "users"
   add_foreign_key "record_likes", "records"

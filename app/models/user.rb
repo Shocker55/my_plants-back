@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_many :records, dependent: :destroy
   has_many :record_likes, dependent: :destroy
   has_many :like_records, through: :record_likes, source: :record, dependent: :destroy
+  has_many :record_bookmarks, dependent: :destroy
+  has_many :bookmark_records, through: :record_bookmarks, source: :record, dependent: :destroy
   has_many :record_comments, dependent: :destroy
   has_many :events, dependent: :destroy
   has_many :event_bookmarks, dependent: :destroy
@@ -17,6 +19,14 @@ class User < ApplicationRecord
 
   def unlike(record)
     like_records.destroy(record)
+  end
+
+  def bookmark_record(record)
+    bookmark_records << record
+  end
+
+  def unbookmark_record(record)
+    bookmark_records.destroy(record)
   end
 
   def bookmark_event(event)

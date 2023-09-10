@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         end
         # ログインしているユーザーのブックマークのみを表示したいのでログイン状態のユーザーはheadderから取得するためparamsにidはいらない
         collection do
+          get :record_bookmarks
           get :event_bookmarks
         end
       end
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
         get :related_records
       end
       resources :record_comments, only: %i[destroy]
+      resources :record_bookmarks, only: %i[create destroy]
       resources :record_likes, only: %i[create destroy]
 
       resources :events, only: %i[index show create update destroy] do

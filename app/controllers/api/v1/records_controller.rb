@@ -23,15 +23,17 @@ class Api::V1::RecordsController < ApplicationController
         ]
       )
     else
-      records = Record.includes(record_likes: { user: [:profile] }, user: [:profile]).all.order(updated_at: "DESC")
+      records = Record.includes(record_likes: { user: [:profile] }, record_bookmarks: :user,
+                                user: [:profile]).all.order(updated_at: "DESC")
       render json: records.as_json(
-        include: [record_likes: { include: :user }, user: { include: :profile }]
+        include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }]
       )
     end
   end
 
   def show
-    record = Record.includes(record_comments: { user: :profile }, record_likes: :user, user: :profile).find(params[:id])
+    record = Record.includes(record_comments: { user: :profile }, record_bookmarks: :user, record_likes: :user,
+                             user: :profile).find(params[:id])
     render json: record.as_json(
       include: [
         # レコードのコメントを含む
@@ -44,6 +46,9 @@ class Api::V1::RecordsController < ApplicationController
           }
         },
         record_likes: {
+          include: :user
+        },
+        record_bookmarks: {
           include: :user
         },
         user: {
