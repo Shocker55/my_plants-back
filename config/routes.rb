@@ -4,8 +4,13 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "/auth", to: "authentications#create"
       resources :users, only: %i[index show create] do
+        # 非ログイン状態のユーザーにも特定のユーザーがいいねした記録を表示したいためparamsのidからユーザーを取得
         member do
           get :likes
+        end
+        # ログインしているユーザーのブックマークのみを表示したいのでログイン状態のユーザーはheadderから取得するためparamsにidはいらない
+        collection do
+          get :event_bookmarks
         end
       end
       resources :profiles, only: %i[create update]
@@ -20,6 +25,7 @@ Rails.application.routes.draw do
         resources :event_comments, only: %i[create]
       end
       resources :event_comments, only: %i[destroy]
+      resources :event_bookmarks, only: %i[create destroy]
     end
   end
 end

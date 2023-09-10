@@ -2,14 +2,14 @@ class Api::V1::EventsController < ApplicationController
   before_action :authenticate, expect: %i[index show]
 
   def index
-    events = Event.includes(user: [:profile]).all.order(updated_at: "DESC")
+    events = Event.includes(event_bookmarks: { user: [:profile] }, user: [:profile]).all.order(updated_at: "DESC")
     render json: events.as_json(
-      include: [user: { include: :profile }]
+      include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )
   end
 
   def show
-    event = Event.includes(user: [:profile]).find(params[:id])
+    event = Event.includes(event_comments: { user: :profile }, event_bookmarks: :user, user: :profile).find(params[:id])
     render json: event.as_json(
       include: [
         event_comments: {
@@ -19,6 +19,9 @@ class Api::V1::EventsController < ApplicationController
               include: :profile # ユーザープロファイルも含む
             }
           }
+        },
+        event_bookmarks: {
+          include: :user
         },
         user: {
           include: :profile
