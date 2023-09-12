@@ -23,6 +23,9 @@ class Api::V1::EventsController < ApplicationController
         event_bookmarks: {
           include: :user
         },
+        event_attendees: {
+          include: { user: { include: :profile } }
+        },
         user: {
           include: :profile
         }

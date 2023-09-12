@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :event_bookmarks, dependent: :destroy
   has_many :bookmark_events, through: :event_bookmarks, source: :event, dependent: :destroy
   has_many :event_comments, dependent: :destroy
+  has_many :event_attendees, dependent: :destroy
+  has_many :attend_events, through: :event_attendees, source: :event, dependent: :destroy
 
   validates :uid, presence: true
 
@@ -35,5 +37,13 @@ class User < ApplicationRecord
 
   def unbookmark_event(event)
     bookmark_events.destroy(event)
+  end
+
+  def attend(event)
+    attend_events << event
+  end
+
+  def cancel(event)
+    attend_events.destroy(event)
   end
 end

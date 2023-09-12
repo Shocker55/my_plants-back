@@ -34,4 +34,12 @@ class Api::V1::UsersController < ApplicationController
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )
   end
+
+  def attend
+    user = User.find_by(uid: params[:id])
+    attend_events = user.attend_events
+    render json: attend_events.as_json(
+      include: [event_bookmarks: { include: :user }, user: { include: :profile }]
+    )
+  end
 end

@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_10_022411) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_11_000117) do
+  create_table "event_attendees", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_attendees_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_event_attendees_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_event_attendees_on_user_id"
+  end
+
   create_table "event_bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
@@ -116,6 +126,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_10_022411) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "event_attendees", "events"
+  add_foreign_key "event_attendees", "users"
   add_foreign_key "event_bookmarks", "events"
   add_foreign_key "event_bookmarks", "users"
   add_foreign_key "event_comments", "events"
