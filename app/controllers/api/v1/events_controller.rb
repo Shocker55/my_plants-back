@@ -2,7 +2,15 @@ class Api::V1::EventsController < ApplicationController
   before_action :authenticate, expect: %i[index show]
 
   def index
-    events = Event.includes(event_bookmarks: { user: [:profile] }, user: [:profile]).all.order(updated_at: "DESC")
+    events = if params[:q] == "past"
+               Event.where("end_date < ?", Date.today).includes(
+                 event_bookmarks: { user: [:profile] }, user: [:profile]
+               ).order(end_date: "DESC")
+             else
+               Event.where("end_date >= ?", Date.today).includes(
+                 event_bookmarks: { user: [:profile] }, user: [:profile]
+               ).order(updated_at: "DESC")
+             end
     render json: events.as_json(
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )

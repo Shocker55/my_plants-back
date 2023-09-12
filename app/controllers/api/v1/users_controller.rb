@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
 
   def attend
     user = User.find_by(uid: params[:id])
-    attend_events = user.attend_events
+    attend_events = user.attend_events.where("end_date >= ?", Date.today)
     render json: attend_events.as_json(
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )
