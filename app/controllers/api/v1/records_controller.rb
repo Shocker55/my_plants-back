@@ -22,6 +22,16 @@ class Api::V1::RecordsController < ApplicationController
           }
         ]
       )
+    elsif params[:q] == "popular"
+      records = Record.includes(
+        record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile]
+      ).left_joins(:record_likes).group('records.id').order('COUNT(record_likes.id) DESC').all
+
+      render json: records.as_json(
+        include: [
+          record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }
+        ]
+      )
     else
       records = Record.includes(record_likes: { user: [:profile] }, record_bookmarks: :user,
                                 user: [:profile]).all.order(updated_at: "DESC")
