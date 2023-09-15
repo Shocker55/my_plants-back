@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         collection do
           get :record_bookmarks
           get :event_bookmarks
+          get :widget
         end
       end
       resources :profiles, only: %i[create update]

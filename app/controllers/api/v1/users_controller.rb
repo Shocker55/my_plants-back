@@ -42,4 +42,38 @@ class Api::V1::UsersController < ApplicationController
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )
   end
+
+  def widget
+    last_record_date = current_user.records.last&.updated_at
+    record_count = current_user.records.count
+    full_date_upcoming_attend_event = current_user.attend_events
+                                                  .where("date_type = ?", 0)
+                                                  .where("end_date >= ?", Date.today)
+                                                  .order(start_date: :asc)
+                                                  .first
+
+    month_only_upcoming_attend_event = current_user.attend_events
+                                                   .where("date_type = ?", 1)
+                                                   .where("end_date >= ?", Date.today)
+                                                   .order(start_date: :asc)
+                                                   .first
+
+    upcoming_event = if full_date_upcoming_attend_event && month_only_upcoming_attend_event &&
+                        (full_date_upcoming_attend_event.start_date.month - month_only_upcoming_attend_event.start_date.month) >= 1
+                       { id: month_only_upcoming_attend_event.id, title: month_only_upcoming_attend_event.title }
+                     elsif full_date_upcoming_attend_event && month_only_upcoming_attend_event &&
+                           (full_date_upcoming_attend_event.start_date.month - month_only_upcoming_attend_event.start_date.month) < 1
+                       { id: full_date_upcoming_attend_event.id, title: full_date_upcoming_attend_event.title }
+                     elsif full_date_upcoming_attend_event && !month_only_upcoming_attend_event
+                       { id: full_date_upcoming_attend_event.id, title: full_date_upcoming_attend_event.title }
+                     elsif !full_date_upcoming_attend_event && month_only_upcoming_attend_event
+                       { id: month_only_upcoming_attend_event.id, title: month_only_upcoming_attend_event.title }
+                     end
+
+    render json: {
+      last_record_date:,
+      record_count:,
+      upcoming_event:
+    }
+  end
 end
