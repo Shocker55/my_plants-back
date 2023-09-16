@@ -9,7 +9,6 @@ class Api::V1::RecordsController < ApplicationController
       else
         render json: { message: "レコードがありません" }
       end
-    # あとでformObject等を使って処理をまとめる
     elsif params[:q] == "own" && params[:uid]
       user = User.find_by(uid: params[:uid])
       records = user.records.includes(:related_records, record_likes: { user: :profile },
@@ -107,6 +106,18 @@ class Api::V1::RecordsController < ApplicationController
 
       render json: { baseRecord: base_record, childRecords: related_records }
     end
+  end
+
+  def search
+    if params[:title]
+      record = RecordForm.new(title: params[:title])
+    elsif params[:body]
+      record = RecordForm.new(body: params[:body])
+    end
+    records = record.search
+    render json: records.as_json(
+      include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }]
+    )
   end
 
   private

@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       resources :records, only: %i[index show create destroy] do
         resources :record_comments, only: %i[create]
         get :related_records
+        collection do
+          get :search
+        end
       end
       resources :record_comments, only: %i[destroy]
       resources :record_bookmarks, only: %i[create destroy]
@@ -28,6 +31,9 @@ Rails.application.routes.draw do
       resources :events, only: %i[index show create update destroy] do
         resources :event_comments, only: %i[create]
         resources :event_attendees, only: %i[index]
+        collection do
+          get :search
+        end
       end
       resources :event_comments, only: %i[destroy]
       resources :event_bookmarks, only: %i[create destroy]

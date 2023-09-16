@@ -70,6 +70,14 @@ class Api::V1::EventsController < ApplicationController
     event.destroy!
   end
 
+  def search
+    event = EventForm.new(word: params[:event])
+    events = event.search
+    render json: events.as_json(
+      include: [event_bookmarks: { include: :user }, user: { include: :profile }]
+    )
+  end
+
   private
 
   def event_params
