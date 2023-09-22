@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate, except: %i[index show likes]
 
   def index
-    users = User.all
+    users = User.page(params[:page]).per(8)
     render json: users, include: [:profile]
   end
 
@@ -37,7 +37,11 @@ class Api::V1::UsersController < ApplicationController
 
   def attend
     user = User.find_by(uid: params[:id])
-    attend_events = user.attend_events.where("end_date >= ?", Date.today)
+    attend_events = if params[:page]
+                      user.attend_events.where("end_date >= ?", Date.today).page(params[:page]).per(8)
+                    else
+                      user.attend_events.where("end_date >= ?", Date.today)
+                    end
     render json: attend_events.as_json(
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
     )

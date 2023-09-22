@@ -5,11 +5,11 @@ class Api::V1::EventsController < ApplicationController
     events = if params[:q] == "past"
                Event.where("end_date < ?", Date.today).includes(
                  event_bookmarks: { user: [:profile] }, user: [:profile]
-               ).order(end_date: "DESC")
+               ).order(end_date: "DESC").page(params[:page]).per(8)
              else
                Event.where("end_date >= ?", Date.today).includes(
                  event_bookmarks: { user: [:profile] }, user: [:profile]
-               ).order(updated_at: "DESC")
+               ).order(updated_at: "DESC").page(params[:page]).per(8)
              end
     render json: events.as_json(
       include: [event_bookmarks: { include: :user }, user: { include: :profile }]
