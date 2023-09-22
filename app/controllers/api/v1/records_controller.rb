@@ -31,6 +31,9 @@ class Api::V1::RecordsController < ApplicationController
           record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }
         ]
       )
+    elsif params[:q] == "random_image_records"
+      records = Record.where.not(image: nil).order("RAND()").limit(5)
+      render json: records
     else
       records = Record.includes(record_likes: { user: [:profile] }, record_bookmarks: :user,
                                 user: [:profile]).order(updated_at: "DESC").page(params[:page]).per(8)
