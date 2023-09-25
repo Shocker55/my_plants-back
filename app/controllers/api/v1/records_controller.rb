@@ -72,11 +72,14 @@ class Api::V1::RecordsController < ApplicationController
 
   def create
     record = current_user.records.build(record_params)
+    tag_names = params[:tags].split(',').uniq
+    record.tags = tag_names.map { |name| Tag.find_or_initialize_by(name: name.strip) }
+
     if params[:base] == "true"
       if record.save
         head :created
       else
-        render json: { message: "不正な値です", errors: record.errors.to_hash(true) }, status: 422
+        render json: { message: record.errors.to_hash(true) }, status: 422
       end
     else
       begin
@@ -86,7 +89,7 @@ class Api::V1::RecordsController < ApplicationController
         end
         head :created
       rescue => e
-        render json: { message: "不正な値です", errors: record.errors.to_hash(true) }, status: 422
+        render json: { message: record.errors.to_hash(true) }, status: 422
       end
     end
   end

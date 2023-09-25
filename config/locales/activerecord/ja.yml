@@ -8,6 +8,9 @@ ja:
         name: "ユーザー名"
         avatar: "アバター画像"
         bio: "ひとこと"
+      record:
+        title: "タイトル"
+        tags: "タグ"
       event:
         title: "イベント名"
         body: "イベント詳細"

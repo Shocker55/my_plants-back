@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_11_000117) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_23_173134) do
   create_table "event_attendees", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
@@ -99,6 +99,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_000117) do
     t.index ["user_id"], name: "index_record_likes_on_user_id"
   end
 
+  create_table "record_tags", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "record_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_id", "tag_id"], name: "index_record_tags_on_record_id_and_tag_id", unique: true
+    t.index ["record_id"], name: "index_record_tags_on_record_id"
+    t.index ["tag_id"], name: "index_record_tags_on_tag_id"
+  end
+
   create_table "records", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "body"
@@ -117,6 +127,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_000117) do
     t.datetime "updated_at", null: false
     t.index ["record_id"], name: "index_related_records_on_record_id"
     t.index ["related_record_id", "record_id"], name: "index_related_records_on_related_record_id_and_record_id", unique: true
+  end
+
+  create_table "tags", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
@@ -140,6 +157,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_000117) do
   add_foreign_key "record_comments", "users"
   add_foreign_key "record_likes", "records"
   add_foreign_key "record_likes", "users"
+  add_foreign_key "record_tags", "records"
+  add_foreign_key "record_tags", "tags"
   add_foreign_key "records", "users"
   add_foreign_key "related_records", "records"
 end

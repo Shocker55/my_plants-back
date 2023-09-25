@@ -33,7 +33,14 @@ module FirebaseAuth
     # 証明書を利用しトークンを再度デコード
     decoded_token = _decode_token(token, certificate.public_key, true, { algorithm: ALGORITHM, verify_iat: true })
 
-    { uid: decoded_token[:payload]['sub'], decoded_token: decoded_token }
+    if decoded_token == "Firebase ID token has expired"
+      render json: { error: 'Firebase ID token has expired. Get a fresh token from your client app and try again.' }, status: 401
+      nil
+    elsif decoded_token.include?("Firebase ID token verification failed")
+      raise full_decoded_token
+    else
+      { uid: decoded_token[:payload]['sub'], decoded_token: decoded_token }
+    end
   end
 
   private
@@ -50,11 +57,10 @@ module FirebaseAuth
     begin
       decoded_token = JWT.decode(token, key, verify, options)
     rescue JWT::ExpiredSignature => e
-      raise 'Firebase ID token has expired. Get a fresh token from your client app and try again.'
+      return "Firebase ID token has expired"
     rescue => e
-      raise "Firebase ID token has invalid signature. #{e.message}"
+      return "Firebase ID token verification failed: #{e.message}"
     end
-
     { payload: decoded_token[0], header: decoded_token[1] }
   end
 
