@@ -15,15 +15,15 @@ class Api::V1::UsersController < ApplicationController
     # ログインしているユーザー限定ではなく、全ユーザーにいいねした記録を表示したいためparamsからユーザーを取得
     user = User.find_by(uid: params[:id])
     like_records = user.like_records
-    render json: like_records, include: [record_likes: { include: :user }, user: { include: :profile }]
+    render json: like_records, include: [record_likes: { include: :user }, user: { include: :profile }, tags: {}]
   end
 
   def record_bookmarks
     # ログインしているユーザーのブックマークを表示するためcurrent_userを使う
     bookmark_records = current_user.bookmark_records.includes(:record_likes, :record_bookmarks,
-                                                              user: :profile).order('record_bookmarks.created_at DESC')
+                                                              user: :profile, tags: {}).order('record_bookmarks.created_at DESC')
     render json: bookmark_records.as_json(
-      include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }]
+      include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }, tags: {}]
     )
   end
 

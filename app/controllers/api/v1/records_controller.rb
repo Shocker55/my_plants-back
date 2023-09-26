@@ -11,41 +11,48 @@ class Api::V1::RecordsController < ApplicationController
       end
     elsif params[:q] == "own" && params[:uid]
       user = User.find_by(uid: params[:uid])
-      records = user.records.includes(:related_records, record_likes: { user: :profile },
-                                                        user: :profile).order(updated_at: "DESC")
+      records = user.records.includes(
+        :related_records, record_likes: { user: :profile }, user: :profile, tags: {}
+      ).order(updated_at: "DESC")
       render json: records.as_json(
         include: [
           :related_records, {
             record_likes: { include: :user },
             user: { include: :profile }
-          }
+          }, { tags: {} }
         ]
       )
     elsif params[:q] == "popular"
       records = Record.includes(
-        record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile]
+        record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile], tags: {}
       ).left_joins(:record_likes).group('records.id').order('COUNT(record_likes.id) DESC').page(params[:page]).per(8)
 
       render json: records.as_json(
         include: [
-          record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }
+          record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }, tags: {}
         ]
       )
     elsif params[:q] == "random_image_records"
       records = Record.where.not(image: nil).order("RAND()").limit(5)
       render json: records
     else
-      records = Record.includes(record_likes: { user: [:profile] }, record_bookmarks: :user,
-                                user: [:profile]).order(updated_at: "DESC").page(params[:page]).per(8)
+      records = Record.includes(
+        record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile], tags: {}
+      ).order(updated_at: "DESC").page(params[:page]).per(8)
+
       render json: records.as_json(
-        include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }]
+        include: [
+          record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }, tags: {}
+        ]
       )
     end
   end
 
   def show
-    record = Record.includes(record_comments: { user: :profile }, record_bookmarks: :user, record_likes: :user,
-                             user: :profile).find(params[:id])
+    record = Record.includes(
+      record_comments: { user: :profile }, record_bookmarks: :user, record_likes: :user, user: :profile, tags: {}
+    ).find(params[:id])
+
     render json: record.as_json(
       include: [
         # レコードのコメントを含む
@@ -65,7 +72,8 @@ class Api::V1::RecordsController < ApplicationController
         },
         user: {
           include: :profile
-        }
+        },
+        tags: {}
       ]
     )
   end
@@ -115,14 +123,16 @@ class Api::V1::RecordsController < ApplicationController
   end
 
   def search
-    if params[:title]
+    if params[:tag]
+      record = RecordForm.new(tag: params[:tag])
+    elsif params[:title]
       record = RecordForm.new(title: params[:title])
     elsif params[:body]
       record = RecordForm.new(body: params[:body])
     end
     records = record.search
     render json: records.as_json(
-      include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }]
+      include: [record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }, tags: {}]
     )
   end
 
