@@ -21,7 +21,8 @@ class Event < ApplicationRecord
   end
 
   def start_end_date_check
-    errors.add(:end_date, "は開始日より前の日付は登録できません") unless
-    start_date <= end_date
+    if start_date && end_date && start_date > end_date
+      errors.add(:end_date, "は開始日より前の日付は登録できません")
+    end
   end
 end
