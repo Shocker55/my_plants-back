@@ -122,13 +122,13 @@ class Api::V1::RecordsController < ApplicationController
   def related_records
     record = Record.find(params[:record_id])
     if record&.base == true
-      related_records = Record.joins(:related_records).where(related_records: { related_record_id: params[:record_id] })
+      related_records = Record.joins(:related_records).where(related_records: { related_record_id: params[:record_id] }).order(updated_at: :desc)
 
       render json: { baseRecord: record, childRecords: related_records }
     else
       base_record_id = record.related_records.first.related_record_id
       base_record = Record.find(base_record_id)
-      related_records = Record.joins(:related_records).where(related_records: { related_record_id: base_record_id }).order(updated_at: "DESC")
+      related_records = Record.joins(:related_records).where(related_records: { related_record_id: base_record_id }).order(updated_at: :desc)
 
       render json: { baseRecord: base_record, childRecords: related_records }
     end
