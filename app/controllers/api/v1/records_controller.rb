@@ -102,6 +102,18 @@ class Api::V1::RecordsController < ApplicationController
     end
   end
 
+  def update
+    record = current_user.records.find(params[:id])
+    tag_names = params[:tags].split(',').uniq
+    record.tags = tag_names.map { |name| Tag.find_or_initialize_by(name: name.strip) }
+
+    if record.update(record_params)
+      head :created
+    else
+      render json: { message: profile.errors.to_hash(true), status: 422 }
+    end
+  end
+
   def destroy
     record = current_user.records.find(params[:id])
     record.destroy!
