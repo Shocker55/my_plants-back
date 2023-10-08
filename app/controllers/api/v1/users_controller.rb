@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate, except: %i[index show likes]
 
   def index
-    users = User.page(params[:page]).per(8)
+    users = User.includes(:profile).where.not(profiles: { id: nil }).order(id: :desc).page(params[:page]).per(8)
     render json: users, include: [:profile]
   end
 
@@ -14,7 +14,7 @@ class Api::V1::UsersController < ApplicationController
   def likes
     # ログインしているユーザー限定ではなく、全ユーザーにいいねした記録を表示したいためparamsからユーザーを取得
     user = User.find_by(uid: params[:id])
-    like_records = user.like_records
+    like_records = user.like_records.includes(:user, :tags)
     render json: like_records, include: [record_likes: { include: :user }, user: { include: :profile }, tags: {}]
   end
 
