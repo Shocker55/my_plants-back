@@ -9,6 +9,8 @@ class Event < ApplicationRecord
   validates :title, presence: true, length: { maximum: 30 }
   validates :body, presence: true, length: { maximum: 200 }
   validates :place, presence: true, length: { maximum: 50 }
+  validates :latitude, presence: true
+  validates :longitude, presence: true
   validates :official_url,
             format: { with: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/, if: :official_url_present? }
   validates_uniqueness_of :title, scope: %i[start_date place], message: 'イベントが登録されています。'
