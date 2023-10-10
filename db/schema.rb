@@ -51,6 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_173134) do
     t.time "start_time"
     t.time "end_time"
     t.string "place", null: false
+    t.string "latitude", null: false
+    t.string "longitude", null: false
     t.string "official_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

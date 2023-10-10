@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       resources :event_comments, only: %i[destroy]
       resources :event_bookmarks, only: %i[create destroy]
       resources :event_attendees, only: %i[create destroy]
+      get "/tags", to: 'tags#index'
     end
   end
 end

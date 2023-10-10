@@ -10,6 +10,8 @@ class CreateEvents < ActiveRecord::Migration[7.0]
       t.time :start_time
       t.time :end_time
       t.string :place, null: false
+      t.string :latitude, null: false
+      t.string :longitude, null: false
       t.string :official_url
 
       t.timestamps
