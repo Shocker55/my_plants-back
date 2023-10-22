@@ -81,7 +81,8 @@ class Api::V1::EventsController < ApplicationController
   private
 
   def event_params
-    params.permit(:title, :body, :start_date, :end_date, :date_type, :start_time, :end_time, :place, :official_url, :latitude, :longitude)
+    params.permit(:title, :body, :start_date, :end_date, :date_type, :start_time, :end_time, :place, :official_url,
+                  :latitude, :longitude)
   end
 
   def calculate_last_day(date_param)
