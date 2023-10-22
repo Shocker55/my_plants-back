@@ -1,7 +1,11 @@
 class Api::V1::RecordLikesController < ApplicationController
   def create
     record = Record.find(params[:record_id])
-    current_user.like(record)
+    if current_user.like(record)
+      head :created
+    else
+      render json: { error: "いいねの作成に失敗しました" }, status: :unprocessable_entity
+    end
   end
 
   def destroy
