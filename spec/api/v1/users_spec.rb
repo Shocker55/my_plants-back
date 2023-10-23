@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe Api::V1::UsersController, type: :request do
+  include AuthenticationHelper
   let(:headers) { { CONTENT_TYPE: 'application/json', Authorization: "Bearer #{ENV['TOKEN']}" } }
 
   describe 'GET /users' do

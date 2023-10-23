@@ -7,7 +7,7 @@ describe Api::V1::EventCommentsController, type: :request do
 
   describe 'POST /event_bookmarks' do
     context "jwtが有効な場合" do
-      it '記録にブックマークができる' do
+      it 'イベントにブックマークができる' do
         authenticate_stub
 
         expect do
@@ -19,7 +19,7 @@ describe Api::V1::EventCommentsController, type: :request do
     end
 
     context "jwtが無効な場合" do
-      it "記録にブックマークができない" do
+      it "イベントにブックマークができない" do
         post(api_v1_event_bookmarks_path, params: { event_id: event.id }.to_json, headers:)
 
         expect(response.status).to eq(401)
