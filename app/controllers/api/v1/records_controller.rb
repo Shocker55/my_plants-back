@@ -35,6 +35,15 @@ class Api::V1::RecordsController < ApplicationController
     elsif params[:q] == "random_image_records"
       records = Record.where.not(image: nil).order("RAND()").limit(5)
       render json: records
+    elsif params[:q] == "new_user_records"
+      records = Record.includes(
+        record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile], tags: {}
+      ).joins(:user).order('users.created_at DESC').limit(5)
+      render json: records.as_json(
+        include: [
+          record_likes: { include: :user }, record_bookmarks: { include: :user }, user: { include: :profile }, tags: {}
+        ]
+      )
     else
       records = Record.includes(
         record_likes: { user: [:profile] }, record_bookmarks: :user, user: [:profile], tags: {}
